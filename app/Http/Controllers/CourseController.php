@@ -31,7 +31,8 @@ class CourseController extends Controller
      */
     public function index()
     {
-        //
+        $courses = $this->courses();
+        return view('courses.index', compact('courses'));
     }
 
     /**
@@ -39,7 +40,7 @@ class CourseController extends Controller
      */
     public function create()
     {
-        //
+        return view('courses.create');
     }
 
     /**
@@ -53,9 +54,17 @@ class CourseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $course)
     {
-        //
+        $selectedCourse = collect($this->courses())->firstWhere('code', $course);
+
+        abort_if($selectedCourse === null, 404);
+
+        return view('courses.show', [
+            'code' => $selectedCourse['code'],
+            'title' => $selectedCourse['title'],
+            'units' => $selectedCourse['units'],
+        ]);
     }
 
     /**
